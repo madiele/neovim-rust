@@ -19,11 +19,11 @@ RUN add-apt-repository -y ppa:neovim-ppa/unstable \
     && mkdir -p ~/.config/nvim/ \
     && apt-get clean
 
-#RUN curl -L -o rust-analyzer-x86_64-unknown-linux-gnu.gz https://github.com/rust-analyzer/rust-analyzer/releases/download/nightly/rust-analyzer-x86_64-unknown-linux-gnu.gz \
-#    && gzip -d rust-analyzer-x86_64-unknown-linux-gnu.gz \
-#    && mkdir -p ~/.local/bin \
-#    && mv rust-analyzer-x86_64-unknown-linux-gnu ~/.local/bin/rust-analyzer \
-#    && chmod +x ~/.local/bin/rust-analyzer \
+# Install node (neded for some lsp)
+RUN apt-get update \
+    && curl -sL https://deb.nodesource.com/setup_14.x  | bash - \
+    && apt-get install -y nodejs\
+    && apt-get clean
 
 # Install Rust
 RUN curl https://sh.rustup.rs -sSf | bash -s -- -y
