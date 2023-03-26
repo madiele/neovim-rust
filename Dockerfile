@@ -24,19 +24,27 @@ RUN apt-get update \
        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim \
     # Setup latest neovim with vim-plug
     && add-apt-repository -y ppa:neovim-ppa/unstable \
+    && apt-get install -y locales \
+    && apt-get install -y unzip wget \
     && apt-get install -y neovim \
     && sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim' \
     && mkdir -p ~/.config/nvim/ \
     && apt-get clean
 
+RUN apt-get update && apt-get install -y python3-pip virtualenv && apt-get clean
+
 # Install Rust
 RUN curl https://sh.rustup.rs -sSf | bash -s -- -y
 ENV PATH="/root/.local/bin:/root/.cargo/bin:${PATH}"
 
+RUN locale-gen it_IT.UTF-8
+ENV LANG='it_IT.UTF-8' LANGUAGE='it_IT:en' LC_ALL='it_IT.UTF-8'
+
 COPY ./configs/ /root/.config/nvim
 
-RUN nvim --headless -c 'sleep 5' +qa
-#RUN echo "nvim ./src/main.rs" > ~/.bash_history && cd ~/ && cargo new test_app
+RUN nvim --headless -c "autocmd User LazySync quitall" "+Lazy! sync"
+RUN nvim --headless +qa
+#RUN nvim --headless "+TSInstall!" +qa
 
 CMD ["/bin/bash"]
