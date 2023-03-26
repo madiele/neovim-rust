@@ -1,0 +1,13 @@
+#to run use: docker-compose run nvim
+version: "3"
+
+services:
+  nvim:
+    build:
+      context: https://github.com/madiele/neovim-rust.git
+      dockerfile: Dockerfile
+        #environment:
+      #- ENV_VAR1=value1
+      #- ENV_VAR2=value2
+    volumes:
+      - .:/repo/
